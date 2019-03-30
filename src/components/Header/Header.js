@@ -1,22 +1,8 @@
-import React from 'react'
-import { Navbar } from 'reactstrap'
-import './Header.css'
+import React from "react";
+import "./Header.css";
 
 const Header = props => {
-  const { user } = props
-  return (
-    <div className="Header">
-      <Navbar className="Header--Navbar">
-	<div className="Header--username">
-	  {user.login}
-	</div>
-	<div className="Header--avatar">
-	  <img src={user.avatar_url} alt={user.login}/>
-	</div>
-      </Navbar>
+  return <div className="Header" />;
+};
 
-    </div>
-  )
-}
-
-export default Header
+export default Header;
