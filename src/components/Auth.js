@@ -7,7 +7,7 @@ import {
   getUserToken,
   propogateCode,
   setUserWithToken
-} from "../../redux/actions/auth";
+} from "../redux/actions/auth";
 
 class Auth extends React.Component {
   componentDidMount() {

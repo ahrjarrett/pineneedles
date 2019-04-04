@@ -77,7 +77,8 @@ const NavStyles = styled.div`
   }
 
   .Nav-wrapper {
-    margin-bottom: 130px;
+    text-align: center;
+    /* margin-bottom: 130px; */
   }
 
   .Nav-wrapper .Nav {

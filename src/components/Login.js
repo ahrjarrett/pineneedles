@@ -1,7 +1,7 @@
 import React from "react";
 import qs from "qs";
 import { v4 } from "uuid";
-import { CLIENT_ID, CLIENT_SECRET } from "../../config";
+import { CLIENT_ID, CLIENT_SECRET } from "../config";
 
 const REDIRECT_ROUTE = "https://github.com/login/oauth/authorize?";
 const CURRENT_ROUTE = window.location.origin;
