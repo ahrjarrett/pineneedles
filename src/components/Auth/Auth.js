@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
 import { compose } from "redux";
 import { connect } from "react-redux";
-import { Redirect, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import qs from "qs";
 import {
   getUserToken,
@@ -9,7 +9,7 @@ import {
   setUserWithToken
 } from "../../redux/actions/auth";
 
-class Auth extends Component {
+class Auth extends React.Component {
   componentDidMount() {
     const { token } = window.localStorage;
     const { location, propogateCode, setUserWithToken, user } = this.props;
@@ -17,7 +17,6 @@ class Auth extends Component {
       setUserWithToken(token);
       return;
     }
-
     const query = qs.parse(location.search.slice(1));
     propogateCode({ code: query.code, state: query.state });
   }
@@ -25,33 +24,22 @@ class Auth extends Component {
   componentDidUpdate(prevProps) {
     const { user, code, state, getUserToken } = this.props;
     if (user.login) {
-      console.log("user exists!", user);
       return;
     } else if (state === window.localStorage.state) {
       if (code && !prevProps.code) {
-        console.log("code, when no previous code!");
         getUserToken(code);
       }
     } else return;
   }
 
   render() {
-    const { code, state } = this.props;
-    return (
-      <div className="Auth">
-        Redirected from Github.
-        <br />
-        Code: {code}
-        <br />
-        State: {state}
-        {/* <Redirect to="/" /> */}
-      </div>
-    );
+    return null;
   }
 }
 
 const mapStateToProps = state => ({
   user: state.auth.user,
+  isLoggedIn: state.auth.isLoggedIn,
   code: state.auth.code,
   state: state.auth.state
 });

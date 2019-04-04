@@ -34,7 +34,6 @@ export const handleLogin = () => dispatch => {
 };
 
 export const getUserToken = code => dispatch => {
-  console.log("calling getUserToken, code:", code);
   axios({
     url: OAUTH_SERVER_URI + code,
     json: true
@@ -44,18 +43,15 @@ export const getUserToken = code => dispatch => {
       if (!token) return null;
       window.localStorage.removeItem("state");
       window.localStorage.setItem("token", token);
-      // return token;
       dispatch(setUserWithToken(token));
+      dispatch(push("/welcome"));
     })
     .catch(error => {
-      console.log("ERROR!", error);
       dispatch({ type: LOGIN_FAILURE, payload: error });
     });
 };
 
 export const setUserWithToken = token => dispatch => {
-  console.log("calling setUserWithToken! token:", token);
-
   let user;
   axios({
     url: "https://api.github.com/user",
@@ -77,7 +73,7 @@ export const logout = () => dispatch => {
   localStorage.removeItem("token");
   localStorage.removeItem("state");
   dispatch({ type: LOGOUT });
-  setTimeout(() => dispatch(push("/zombie")), 2000);
+  dispatch(push("/logout"));
 };
 
 export const propogateCode = ({ code, state }) => {

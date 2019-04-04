@@ -8,16 +8,24 @@ import Login from "../Login/Login";
 import Auth from "../Auth/Auth";
 import Student from "../Student/Student";
 
+import { setUserWithToken } from "../../redux/actions/auth";
 import "./App.css";
 
 class App extends Component {
-  render() {
-    const { user } = this.props;
+  componentDidMount() {
     const { token } = window.localStorage;
+    const { isLoggedIn, setUserWithToken } = this.props;
+    if (token && !isLoggedIn) {
+      setUserWithToken(token);
+    }
+  }
+
+  render() {
+    const { isLoggedIn, user } = this.props;
     return (
       <div className="App">
         <Route path="/" render={() => <Nav filterStudents={() => null} />} />
-        {!token ? (
+        {!isLoggedIn ? (
           <div>
             <Route path="/login" component={Login} />
             <Route path="/auth/callback" component={Auth} />
@@ -25,8 +33,7 @@ class App extends Component {
         ) : (
           <div>
             <Route
-              exact
-              path="/"
+              path="/welcome"
               render={() => (
                 <div>
                   Welcome, {user.name || user.login}! Go to your{" "}
@@ -44,7 +51,11 @@ class App extends Component {
 }
 
 const mapStateToProps = state => ({
+  isLoggedIn: state.auth.isLoggedIn,
   user: state.auth.user
 });
 
-export default connect(mapStateToProps)(App);
+export default connect(
+  mapStateToProps,
+  { setUserWithToken }
+)(App);

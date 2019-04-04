@@ -7,7 +7,7 @@ import Logo from "./Logo";
 import SearchBar from "./SearchBar";
 import { handleLogin, logout } from "../redux/actions/auth";
 
-const Nav = ({ filterStudents, handleLogin, logout, user }) => {
+const Nav = ({ filterStudents, handleLogin, logout, user, isLoggedIn }) => {
   return (
     <NavStyles>
       <div className="Nav-wrapper">
@@ -17,7 +17,7 @@ const Nav = ({ filterStudents, handleLogin, logout, user }) => {
               <Logo width={100} color={"#fff"} />
             </div>
 
-            {user && (
+            {isLoggedIn && (
               <div className="Header--avatar">
                 <img src={user.avatar_url} alt={user.login} />
               </div>
@@ -31,12 +31,15 @@ const Nav = ({ filterStudents, handleLogin, logout, user }) => {
 
             <div className="Nav-search">
               <SearchBar filterStudents={filterStudents} />
-              <Butt onClick={handleLogin} className="Nav-login">
-                Log in
-              </Butt>
-              <Butt className="Nav-logout" onClick={logout}>
-                Log out
-              </Butt>
+              {isLoggedIn ? (
+                <Butt className="Nav-logout" onClick={logout}>
+                  Log out
+                </Butt>
+              ) : (
+                <Butt onClick={handleLogin} className="Nav-login">
+                  Log in
+                </Butt>
+              )}
             </div>
           </div>
         </div>
@@ -175,7 +178,8 @@ const NavStyles = styled.div`
 `;
 
 const mapStateToProps = state => ({
-  user: state.auth.user
+  user: state.auth.user,
+  isLoggedIn: state.auth.isLoggedIn
 });
 
 export default connect(
