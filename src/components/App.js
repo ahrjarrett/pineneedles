@@ -57,6 +57,7 @@ const AppStyles = styled.div`
 
   a:hover {
     text-decoration: none;
+    color: #0056b3;
   }
 
   .container {
@@ -83,12 +84,13 @@ const AppStyles = styled.div`
   .content-wrapper {
     width: 100%;
     margin-top: 56px;
-    padding-top: 72px;
+    padding-top: 96px;
   }
 
   h1.App-title {
     font-size: 32px;
     font-weight: 600;
     line-height: 30px;
+    margin-bottom: 48px;
   }
 `;

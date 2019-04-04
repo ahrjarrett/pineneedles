@@ -22,7 +22,7 @@ const Router = ({ isLoggedIn, user }) => (
         <Route path="/welcome" render={() => <Welcome user={user} />} />
         <Route path="/dashboard" component={Dashboard} />
         <Route exact path="/students" component={StudentList} />
-        <Route path="/students/:student" component={Student} />
+        <Route path="/students/:login" component={Student} />
       </div>
     )}
   </React.Fragment>

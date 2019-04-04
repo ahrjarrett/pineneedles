@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 import { trackedStudents } from "../hardcodedData";
 
-const githubUrl = "https://api.github.com";
+export const githubUrl = "https://api.github.com";
 
 class StudentList extends React.Component {
   constructor(props) {
@@ -17,14 +17,8 @@ class StudentList extends React.Component {
   }
 
   async componentDidMount() {
-    const token = this.props.token || localStorage.token;
-
     if (this.state.students.length) return;
-    // if (window.localStorage.students) {
-    //   this.setState({ students: JSON.parse(window.localStorage.students) });
-    //   return;
-    // }
-
+    const token = this.props.token || localStorage.token;
     const promises = trackedStudents.map(async username => {
       const response = await axios({
         url: `${githubUrl}/users/${username}`,
@@ -36,9 +30,9 @@ class StudentList extends React.Component {
       });
       return response;
     });
-
     const responses = await Promise.all(promises);
     const students = responses.map(({ data }) => data);
+
     window.localStorage.setItem("students", JSON.stringify(students));
     this.setState({ students });
   }
