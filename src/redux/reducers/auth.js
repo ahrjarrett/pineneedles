@@ -38,6 +38,8 @@ export const authReducer = (S = defaultState, action) => {
         user: {},
         error: null,
         isLoggedIn: false,
+        code: "",
+        state: "",
         token: ""
       };
 

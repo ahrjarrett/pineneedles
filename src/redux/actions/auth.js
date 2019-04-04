@@ -34,6 +34,7 @@ export const handleLogin = () => dispatch => {
 };
 
 export const getUserToken = code => dispatch => {
+  console.log("calling getUserToken, code:", code);
   axios({
     url: OAUTH_SERVER_URI + code,
     json: true
