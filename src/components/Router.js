@@ -23,6 +23,14 @@ const Router = ({ isLoggedIn, user }) => (
       <div>
         <Route path="/welcome" render={() => <Welcome user={user} />} />
         <Route path="/dashboard" component={Dashboard} />
+        <Route
+          path="/reporting"
+          component={() => (
+            <h4>
+              Coming soon! <Link to="/dashboard">Back to the dashboard</Link>
+            </h4>
+          )}
+        />
         <Route exact path="/students" component={StudentList} />
         <Route exact path="/students/:login" component={Student} />
         <Route

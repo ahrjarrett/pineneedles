@@ -26,7 +26,7 @@ const Nav = ({ filterStudents, handleLogin, logout, user, isLoggedIn }) => {
             <div className="Nav-links">
               <Link to="/dashboard">Dashboard</Link>
               <Link to="/students">Students</Link>
-              <Link to="/">Reporting</Link>
+              <Link to="/reporting">Reporting</Link>
             </div>
 
             <div className="Nav-search">
@@ -78,7 +78,6 @@ const NavStyles = styled.div`
 
   .Nav-wrapper {
     text-align: center;
-    /* margin-bottom: 130px; */
   }
 
   .Nav-wrapper .Nav {
