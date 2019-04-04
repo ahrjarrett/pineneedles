@@ -8,6 +8,7 @@ import Login from "./Login";
 import Auth from "./Auth";
 import Student from "./Student";
 import StudentList from "./StudentList";
+import Repo from "./Repo";
 
 const Router = ({ isLoggedIn, user }) => (
   <React.Fragment>
@@ -22,7 +23,14 @@ const Router = ({ isLoggedIn, user }) => (
         <Route path="/welcome" render={() => <Welcome user={user} />} />
         <Route path="/dashboard" component={Dashboard} />
         <Route exact path="/students" component={StudentList} />
-        <Route path="/students/:login" component={Student} />
+        <Route exact path="/students/:login" component={Student} />
+        <Route
+          exact
+          path="/students/:login/repos/:repo"
+          render={({ match }) => (
+            <Repo repoName={match.params.repo} login={match.params.login} />
+          )}
+        />
       </div>
     )}
   </React.Fragment>

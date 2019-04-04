@@ -24,7 +24,8 @@ class Student extends React.Component {
     const token = this.props.token || localStorage.token;
     const localRepos = JSON.parse(
       window.localStorage.getItem(`${login}-repos`)
-    ).sort(sortByUpdatedDesc);
+    );
+    if (localRepos) localRepos.sort(sortByUpdatedDesc);
 
     if (localRepos) {
       console.log("skipping API call! localRepos:", localRepos);
