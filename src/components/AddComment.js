@@ -10,8 +10,9 @@ function AddComment({ token, owner, repoName, sha }) {
   const url = `${githubUrl}/repos/${login}/${repoName}/commits/${sha}/comments`;
   console.log("URL:", url);
 
-  const [state, setState] = useState("");
-  const handleChange = e => setState(e.target.value);
+  const [body, setBody] = useState("");
+  const [commentUrl, setCommentUrl] = useState("");
+  const handleChange = e => setBody(e.target.value);
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -20,7 +21,7 @@ function AddComment({ token, owner, repoName, sha }) {
       method: "POST",
       url: url,
       data: {
-        body: state
+        body: body
         // path: Relative path of the file to comment on.
         // position: Line index in the diff to comment on.
       },
@@ -34,7 +35,8 @@ function AddComment({ token, owner, repoName, sha }) {
 
     console.log("response:", response);
 
-    setState("");
+    setCommentUrl(response.data.html_url);
+    setBody("");
   };
 
   const SHA = !sha ? "(select SHA)" : sha.slice(0, 5) + "...";
@@ -42,10 +44,21 @@ function AddComment({ token, owner, repoName, sha }) {
   return (
     <AddCommentStyles>
       <form onSubmit={handleSubmit}>
-        <label>#{sha}</label>
+        {commentUrl ? (
+          <a
+            href={commentUrl}
+            className="posted-comment-url"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Visit your comment!
+          </a>
+        ) : (
+          <label>#{sha}</label>
+        )}
         <textarea
           className="add-comment-input"
-          value={state}
+          value={body}
           placeholder={`Comment on ${SHA}`}
           onChange={handleChange}
         />
@@ -89,6 +102,10 @@ const AddCommentStyles = styled.div`
     border-radius: 3px;
     font-weight: 600;
     color: #24292e;
+  }
+  .posted-comment-url {
+    font-weight: 600;
+    color: #0366d6;
   }
 `;
 
