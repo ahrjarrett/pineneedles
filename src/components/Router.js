@@ -9,6 +9,7 @@ import Auth from "./Auth";
 import Student from "./Student";
 import StudentList from "./StudentList";
 import Repo from "./Repo";
+import CommentList from "./CommentList";
 
 const Router = ({ isLoggedIn, user }) => (
   <React.Fragment>
@@ -30,6 +31,10 @@ const Router = ({ isLoggedIn, user }) => (
           render={({ match }) => (
             <Repo repoName={match.params.repo} login={match.params.login} />
           )}
+        />
+        <Route
+          path="/students/:login/repos/:repo/commit/:sha/comments"
+          component={CommentList}
         />
       </div>
     )}

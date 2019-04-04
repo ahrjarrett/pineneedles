@@ -3,28 +3,25 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
-import Comment from "./Comment";
 import AddComment from "./AddComment";
 
-const githubUrl = "https://api.github.com";
+import { githubUrl } from "./StudentList";
 
 class Repo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      comments: [],
       repo: {},
       commits: [],
       sha: ""
     };
   }
 
-  componentDidMount = () => {
-    const { login, repoName } = this.props;
-    this.fetchRepoComments(login, repoName);
+  componentDidMount() {
+    const { repoName } = this.props;
     this.fetchRepoCommits(repoName);
     this.fetchRepo(repoName);
-  };
+  }
 
   fetchRepo = async function(repoName) {
     const token = this.props.token || localStorage.token;
@@ -56,20 +53,6 @@ class Repo extends Component {
     this.setState({ commits: commits.data });
   };
 
-  fetchRepoComments = async function(login, repoName) {
-    const token = this.props.token || localStorage.token;
-    const promise = await axios({
-      method: "GET",
-      url: `${githubUrl}/repos/${login}/${repoName}/comments`,
-      headers: {
-        Authorization: `token ${token}`,
-        Accept: "application/vnd.github.v3+json"
-      }
-    });
-    const comments = await Promise.resolve(promise);
-    this.setState({ comments: comments.data });
-  };
-
   updateCommitSha = e => {
     console.log("updating active commit!");
     console.log(e);
@@ -81,11 +64,10 @@ class Repo extends Component {
   };
 
   render() {
-    const { comments, repo, commits, sha } = this.state;
+    const { repo, commits, sha } = this.state;
     const { login, token } = this.props;
 
     // DELETE:
-    console.log("comments:", comments);
     console.log("repo:", repo);
 
     return (
@@ -117,15 +99,9 @@ class Repo extends Component {
                     propogateSha={this.propogateSha(commit.sha)}
                   />
                 ))
-              : "No comments yet"}
+              : "No commits yet"}
           </div>
-          <div className="Repo-comments col-sm-3">
-            {/* {comments.length > 0 &&
-              comments.map(comment => (
-                <Comment comment={comment} key={comment.id} />
-              ))}
-            {comments.length === 0 && "No comments yet"} */}
-          </div>
+          <div className="Repo-comments col-sm-3" />
         </div>
       </RepoStyles>
     );
@@ -149,27 +125,31 @@ const Commit = ({ commit, propogateSha, sha, activeSha, repo, token }) => {
           >
             See on GitHub
           </a>
-          <span className="Commit-message-text">
-            {commit.commit.message.length > 80
-              ? commit.commit.message.slice(0, 80) + "..."
-              : commit.commit.message}
-          </span>
+          <span className="Commit-message-text">{commit.commit.message}</span>
         </div>
-        <div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between"
+          }}
+        >
           <button className="Commit-select-button" onClick={propogateSha}>
-            Comment on {sha.slice(0, 4)}...
+            Comment on {sha.slice(0, 5)}...
           </button>
+          <Link
+            to={`/students/${repo.owner.login}/repos/${
+              repo.name
+            }/commit/${sha}/comments`}
+            className="Commit-select-button"
+            onClick={propogateSha}
+          >
+            See Comments
+          </Link>
         </div>
       </div>
 
-      {activeSha === sha && (
-        <AddComment
-          token={token}
-          repoName={repo.name}
-          owner={repo.owner}
-          sha={sha}
-        />
-      )}
+      {activeSha === sha && <AddComment repoName={repo.name} sha={sha} />}
     </CommitStyles>
   );
 };
@@ -233,17 +213,26 @@ const CommitStyles = styled.div`
     justify-content: space-between;
   }
   .Commit-message-text {
+    height: 62px;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
   }
   .Commit-message-url {
     color: #0366d6;
     min-width: 120px;
   }
   .Commit-select-button {
-    width: 146px;
+    width: 152px;
     margin-right: 4px;
+    display: flex;
+    align-items: center;
+    height: 28px;
+    &:hover {
+      color: #0056b3;
+    }
 
     padding: 3px 10px;
-    height: 100%;
     line-height: 20px;
     background-color: #eff3f6;
     background-image: -webkit-gradient(

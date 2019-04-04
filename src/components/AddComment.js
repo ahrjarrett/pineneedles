@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { withRouter } from "react-router-dom";
+import { connect } from "react-redux";
 import styled from "styled-components";
 import axios from "axios";
 
 import { githubUrl } from "./StudentList";
 
-function AddComment({ token, owner, repoName, sha }) {
+function AddComment({ match, token, repoName, sha }) {
   token = token || localStorage.token;
-  const login = "ahrjarrett";
+  const { login } = match.params;
   const url = `${githubUrl}/repos/${login}/${repoName}/commits/${sha}/comments`;
   console.log("URL:", url);
 
@@ -22,8 +24,6 @@ function AddComment({ token, owner, repoName, sha }) {
       url: url,
       data: {
         body: body
-        // path: Relative path of the file to comment on.
-        // position: Line index in the diff to comment on.
       },
       headers: {
         Authorization: `token ${token}`,
@@ -31,11 +31,10 @@ function AddComment({ token, owner, repoName, sha }) {
       }
     });
 
-    const response = await Promise.resolve(promise);
+    const { data } = await Promise.resolve(promise);
+    console.log("response:", data);
 
-    console.log("response:", response);
-
-    setCommentUrl(response.data.html_url);
+    setCommentUrl(data.html_url);
     setBody("");
   };
 
@@ -77,7 +76,7 @@ const AddCommentStyles = styled.div`
   }
   textarea {
     width: 100%;
-    height: 60px;
+    height: 76px;
     border: 1px solid rgba(27, 31, 35, 0.2);
     border-radius: 3px;
   }
@@ -109,4 +108,8 @@ const AddCommentStyles = styled.div`
   }
 `;
 
-export default AddComment;
+const mapStateToProps = state => ({
+  token: state.auth.token
+});
+
+export default withRouter(connect(mapStateToProps)(AddComment));

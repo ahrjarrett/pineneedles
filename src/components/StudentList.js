@@ -1,7 +1,6 @@
 import React from "react";
 import axios from "axios";
 import styled from "styled-components";
-import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { trackedStudents } from "../hardcodedData";
@@ -50,28 +49,29 @@ class StudentList extends React.Component {
   }
 }
 
-const StudentCard = ({ student }) => (
-  <div className="student-card">
-    <div className="student-card-info">
-      <div className="student-card-avatar">
-        <Link to={`/students/${student.login}`}>
-          <img src={`${student.avatar_url}`} />
-        </Link>
+const StudentCard = ({ student }) => {
+  const name = student.name || student.login;
+  return (
+    <div className="student-card">
+      <div className="student-card-info">
+        <div className="student-card-avatar">
+          <Link to={`/students/${student.login}`}>
+            <img src={student.avatar_url} alt={`Student: ${name}`} />
+          </Link>
+        </div>
+        <div className="student-card-names">
+          <Link to={`/students/${student.login}`}>
+            <span className="student-card-name">{name}</span>
+            <span className="student-card-login">{student.login}</span>
+          </Link>
+        </div>
       </div>
-      <div className="student-card-names">
-        <Link to={`/students/${student.login}`}>
-          <span className="student-card-name">
-            {student.name || student.login}
-          </span>
-          <span className="student-card-login">{student.login}</span>
-        </Link>
-      </div>
+      <Link className="student-card-button" to={`/students/${student.login}`}>
+        Go to Student
+      </Link>
     </div>
-    <Link className="student-card-button" to={`/students/${student.login}`}>
-      Go to Student
-    </Link>
-  </div>
-);
+  );
+};
 
 const StudentListStyles = styled.div`
   h2 {
@@ -142,8 +142,4 @@ const StudentListStyles = styled.div`
   }
 `;
 
-const mapStateToProps = state => ({
-  token: state.auth.token
-});
-
-export default connect()(StudentList);
+export default StudentList;
