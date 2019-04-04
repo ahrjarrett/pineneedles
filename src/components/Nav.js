@@ -1,12 +1,13 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import Logo from "./Logo";
 import SearchBar from "./SearchBar";
-import { handleLogin } from "../actions";
+import { handleLogin, logout } from "../redux/actions/auth";
 
-const Nav = ({ filterStudents, user }) => {
+const Nav = ({ filterStudents, handleLogin, logout, user }) => {
   return (
     <NavStyles>
       <div className="Nav-wrapper">
@@ -16,9 +17,11 @@ const Nav = ({ filterStudents, user }) => {
               <Logo width={100} color={"#fff"} />
             </div>
 
-            <div className="Header--avatar">
-              <img src={user.avatar_url} alt={user.login} />
-            </div>
+            {user && (
+              <div className="Header--avatar">
+                <img src={user.avatar_url} alt={user.login} />
+              </div>
+            )}
 
             <div className="Nav-links">
               <Link to="/dashboard">Dashboard</Link>
@@ -31,9 +34,9 @@ const Nav = ({ filterStudents, user }) => {
               <Butt onClick={handleLogin} className="Nav-login">
                 Log in
               </Butt>
-              <Link to="/logout" className="Nav-logout">
+              <Butt className="Nav-logout" onClick={logout}>
                 Log out
-              </Link>
+              </Butt>
             </div>
           </div>
         </div>
@@ -42,11 +45,12 @@ const Nav = ({ filterStudents, user }) => {
   );
 };
 
-const Butt = styled.a`
+const Butt = styled.button`
   background: transparent;
+  border: none;
   cursor: pointer;
   &:hover {
-    text-decoration: underline !impotant;
+    text-decoration: underline !important;
   }
 `;
 
@@ -110,14 +114,21 @@ const NavStyles = styled.div`
     padding-right: 20px;
   }
 
-  .Nav a:hover {
+  .Nav a:hover,
+  button:hover {
     color: #999;
   }
 
-  .Nav a {
+  .Nav a,
+  button {
     font-weight: 300;
     font-size: 18px;
     color: #ffffff;
+  }
+
+  .Nav button {
+    background: transparent;
+    border: none;
   }
 
   .Nav .active-route {
@@ -163,4 +174,11 @@ const NavStyles = styled.div`
   }
 `;
 
-export default Nav;
+const mapStateToProps = state => ({
+  user: state.auth.user
+});
+
+export default connect(
+  mapStateToProps,
+  { handleLogin, logout }
+)(Nav);

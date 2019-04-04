@@ -5,7 +5,8 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import logger from "redux-logger";
 import thunk from "redux-thunk";
 
-import { authReducer, githubReducer } from "./reducers";
+import { authReducer } from "./redux/reducers/auth";
+import { githubReducer } from "./redux/reducers/github";
 
 export const history = createBrowserHistory();
 
@@ -14,8 +15,8 @@ const middleware = [thunk, logger, routerMiddleware(history)];
 
 const createRootReducer = history =>
   combineReducers({
-    authReducer,
-    githubReducer,
+    auth: authReducer,
+    github: githubReducer,
     router: connectRouter(history)
   });
 
