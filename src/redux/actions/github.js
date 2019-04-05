@@ -21,6 +21,8 @@ export const githubUrl = "https://api.github.com";
 
 export const sortByUpdatedDesc = (a, b) =>
   new Date(a.updated_at) < new Date(b.updated_at) ? 1 : -1;
+export const sortByCreatedDesc = (a, b) =>
+  new Date(a.created_at) < new Date(b.created_at) ? 1 : -1;
 
 export const fetchStudents = () => async (dispatch, getState) => {
   if (getState().github.students.length) return;
@@ -115,5 +117,31 @@ export const fetchAllRepos = login => async (dispatch, getState) => {
     dispatch({ type: FETCH_ALL_REPOS_SUCCESS, payload: repos });
   } catch (error) {
     dispatch({ type: FETCH_ALL_REPOS_FAILURE, payload: error });
+  }
+};
+
+export const fetchComments = (login, repoName) => async (
+  dispatch,
+  getState
+) => {
+  const { token } = getState().auth || localStorage.token;
+  dispatch({ type: INIT_QUERY });
+
+  const promise = await axios({
+    method: "GET",
+    url: `${githubUrl}/repos/${login}/${repoName}/comments`,
+    headers: {
+      Authorization: `token ${token}`,
+      Accept: "application/vnd.github.v3+json"
+    }
+  });
+  try {
+    const { data } = await Promise.resolve(promise);
+    dispatch({
+      type: FETCH_COMMENTS_SUCCESS,
+      payload: data.sort(sortByCreatedDesc)
+    });
+  } catch (error) {
+    dispatch({ type: FETCH_COMMENTS_FAILURE, payload: error });
   }
 };

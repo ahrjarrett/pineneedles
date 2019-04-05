@@ -46,9 +46,6 @@ export const githubReducer = (state = defaultState, action) => {
     case FETCH_ALL_REPOS_FAILURE:
       return { ...state, pending: false, error: action.payload };
 
-    case FETCH_COMMENTS_FAILURE:
-      return { ...state, pending: false, error: action.payload };
-
     case FETCH_REPO_SUCCESS:
       return { ...state, pending: false, error: null, repo: action.payload };
 
@@ -62,10 +59,15 @@ export const githubReducer = (state = defaultState, action) => {
       return { ...state, pending: false, error: action.payload };
 
     case FETCH_COMMENTS_SUCCESS:
-      return { ...state };
+      return {
+        ...state,
+        pending: false,
+        error: null,
+        comments: action.payload
+      };
 
     case FETCH_COMMENTS_FAILURE:
-      return { ...state };
+      return { ...state, pending: false, error: action.payload };
 
     case POST_COMMENT_SUCCESS:
       return { ...state };

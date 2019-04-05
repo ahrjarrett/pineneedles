@@ -1,59 +1,40 @@
 import React from "react";
-import axios from "axios";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import styled from "styled-components";
 
-import { githubUrl } from "../redux/actions/github";
+import { githubUrl, fetchComments } from "../redux/actions/github";
 import CommentCard from "./CommentCard";
 
 class CommentList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      comments: []
-    };
   }
   componentDidMount() {
     const { login, repo } = this.props.match.params;
-    this.fetchRepoComments(login, repo);
+    this.props.fetchComments(login, repo);
   }
 
-  fetchRepoComments = async function(login, repoName) {
-    const token = this.props.token || localStorage.token;
-    const promise = await axios({
-      method: "GET",
-      url: `${githubUrl}/repos/${login}/${repoName}/comments`,
-      headers: {
-        Authorization: `token ${token}`,
-        Accept: "application/vnd.github.v3+json"
-      }
-    });
-    const { data } = await Promise.resolve(promise);
-    this.setState({
-      comments: data.sort((a, b) =>
-        new Date(a.created_at) < new Date(b.created_at) ? 1 : -1
-      )
-    });
-  };
-
-  fetchRepoCommits = async function(repo) {
-    const token = this.props.token || localStorage.token;
-    const { login, repoName } = this.props;
-    const promise = await axios({
-      method: "GET",
-      url: `${githubUrl}/repos/${login}/${repoName}/commits`,
-      headers: {
-        Authorization: `token ${token}`,
-        Accept: "application/vnd.github.v3+json"
-      }
-    });
-    const commits = await Promise.resolve(promise);
-    this.setState({ commits: commits.data });
-  };
+  // fetchRepoComments = async function(login, repoName) {
+  //   const token = this.props.token || localStorage.token;
+  //   const promise = await axios({
+  //     method: "GET",
+  //     url: `${githubUrl}/repos/${login}/${repoName}/comments`,
+  //     headers: {
+  //       Authorization: `token ${token}`,
+  //       Accept: "application/vnd.github.v3+json"
+  //     }
+  //   });
+  //   const { data } = await Promise.resolve(promise);
+  //   this.setState({
+  //     comments: data.sort((a, b) =>
+  //       new Date(a.created_at) < new Date(b.created_at) ? 1 : -1
+  //     )
+  //   });
+  // };
 
   render() {
-    const { comments } = this.state;
+    const { comments } = this.props;
     const { login, repo, sha } = this.props.match.params;
     const shortSha = sha.slice(0, 7);
     return (
@@ -135,7 +116,13 @@ const CommentListStyles = styled.div`
 `;
 
 const mapStateToProps = state => ({
-  token: state.auth.token
+  token: state.auth.token,
+  comments: state.github.comments
 });
 
-export default withRouter(connect(mapStateToProps)(CommentList));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    { fetchComments }
+  )(CommentList)
+);
