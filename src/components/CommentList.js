@@ -3,35 +3,14 @@ import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import styled from "styled-components";
 
-import { githubUrl, fetchComments } from "../redux/actions/github";
+import { fetchComments } from "../redux/actions/github";
 import CommentCard from "./CommentCard";
 
 class CommentList extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   componentDidMount() {
     const { login, repo } = this.props.match.params;
     this.props.fetchComments(login, repo);
   }
-
-  // fetchRepoComments = async function(login, repoName) {
-  //   const token = this.props.token || localStorage.token;
-  //   const promise = await axios({
-  //     method: "GET",
-  //     url: `${githubUrl}/repos/${login}/${repoName}/comments`,
-  //     headers: {
-  //       Authorization: `token ${token}`,
-  //       Accept: "application/vnd.github.v3+json"
-  //     }
-  //   });
-  //   const { data } = await Promise.resolve(promise);
-  //   this.setState({
-  //     comments: data.sort((a, b) =>
-  //       new Date(a.created_at) < new Date(b.created_at) ? 1 : -1
-  //     )
-  //   });
-  // };
 
   render() {
     const { comments } = this.props;

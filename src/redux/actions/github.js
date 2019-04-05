@@ -1,6 +1,5 @@
 import axios from "axios";
 import { trackedStudents } from "../../hardcodedData";
-
 import {
   INIT_QUERY,
   FETCH_STUDENTS_SUCCESS,
@@ -12,9 +11,9 @@ import {
   FETCH_COMMITS_SUCCESS,
   FETCH_COMMITS_FAILURE,
   FETCH_COMMENTS_SUCCESS,
-  FETCH_COMMENTS_FAILURE,
-  POST_COMMENT_SUCCESS,
-  POST_COMMENT_FAILURE
+  FETCH_COMMENTS_FAILURE
+  // POST_COMMENT_SUCCESS,
+  // POST_COMMENT_FAILURE
 } from "./types";
 
 export const githubUrl = "https://api.github.com";

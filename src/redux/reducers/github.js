@@ -9,9 +9,9 @@ import {
   FETCH_COMMITS_SUCCESS,
   FETCH_COMMITS_FAILURE,
   FETCH_COMMENTS_SUCCESS,
-  FETCH_COMMENTS_FAILURE,
-  POST_COMMENT_SUCCESS,
-  POST_COMMENT_FAILURE
+  FETCH_COMMENTS_FAILURE
+  // POST_COMMENT_SUCCESS,
+  // POST_COMMENT_FAILURE
 } from "../actions/types";
 
 const defaultState = {
@@ -69,11 +69,11 @@ export const githubReducer = (state = defaultState, action) => {
     case FETCH_COMMENTS_FAILURE:
       return { ...state, pending: false, error: action.payload };
 
-    case POST_COMMENT_SUCCESS:
-      return { ...state };
+    // case POST_COMMENT_SUCCESS:
+    //   return { ...state };
 
-    case POST_COMMENT_FAILURE:
-      return { ...state };
+    // case POST_COMMENT_FAILURE:
+    //   return { ...state };
 
     default:
       return state;
