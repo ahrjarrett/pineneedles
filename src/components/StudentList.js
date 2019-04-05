@@ -1,43 +1,21 @@
 import React from "react";
-import axios from "axios";
+import { connect } from "react-redux";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-import { trackedStudents } from "../hardcodedData";
-
-export const githubUrl = "https://api.github.com";
+import { fetchStudents } from "../redux/actions/github";
 
 class StudentList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      students: JSON.parse(window.localStorage.getItem("students")) || []
-    };
   }
 
-  async componentDidMount() {
-    if (this.state.students.length) return;
-    const token = this.props.token || localStorage.token;
-    const promises = trackedStudents.map(async username => {
-      const response = await axios({
-        url: `${githubUrl}/users/${username}`,
-        method: "GET",
-        headers: {
-          Authorization: `token ${token}`,
-          Accept: "application/vnd.github.v3+json"
-        }
-      });
-      return response;
-    });
-    const responses = await Promise.all(promises);
-    const students = responses.map(({ data }) => data);
-
-    window.localStorage.setItem("students", JSON.stringify(students));
-    this.setState({ students });
+  componentDidMount() {
+    this.props.fetchStudents();
   }
 
   render() {
-    const { students } = this.state;
+    const { students } = this.props;
     return (
       <StudentListStyles>
         <h2 className="StudentList-subtitle">Here are your students:</h2>
@@ -72,6 +50,17 @@ const StudentCard = ({ student }) => {
     </div>
   );
 };
+
+const mapStateToProps = state => ({
+  students: state.github.students
+});
+
+const mapDispatchToProps = { fetchStudents };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(StudentList);
 
 const StudentListStyles = styled.div`
   h2 {
@@ -141,5 +130,3 @@ const StudentListStyles = styled.div`
     color: #0366d6;
   }
 `;
-
-export default StudentList;

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import axios from "axios";
 
-import { githubUrl } from "./StudentList";
+import { githubUrl } from "../redux/actions/github";
 
 function AddComment({ match, token, repoName, sha }) {
   token = token || localStorage.token;

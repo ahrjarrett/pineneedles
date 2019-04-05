@@ -6,14 +6,16 @@ export default class SearchBar extends Component {
     this.state = { term: "" };
   }
 
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.filterStudents(this.state.term);
-  };
+  // handleSubmit = e => {
+  //   e.preventDefault();
+  //   this.props.filterStudents(this.state.term);
+  // };
 
   handleChange = e => {
     const term = e.target.value;
+    console.log(term);
     this.setState({ term });
+    // this.setState({ term }, (nextProps, nextState) => this.props.filterStudents(nextState.term));
   };
 
   render() {

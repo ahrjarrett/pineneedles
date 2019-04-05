@@ -14,6 +14,7 @@ import CommentList from "./CommentList";
 const Router = ({ isLoggedIn, user }) => (
   <React.Fragment>
     <Route path="/" component={Nav} />
+    <Route path="/" component={Nav} />
     {!isLoggedIn ? (
       <div>
         <Route path="/login" component={Login} />

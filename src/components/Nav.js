@@ -7,7 +7,7 @@ import Logo from "./Logo";
 import SearchBar from "./SearchBar";
 import { handleLogin, logout } from "../redux/actions/auth";
 
-const Nav = ({ filterStudents, handleLogin, logout, user, isLoggedIn }) => {
+const Nav = ({ handleLogin, logout, user, isLoggedIn }) => {
   return (
     <NavStyles>
       <div className="Nav-wrapper">
@@ -30,7 +30,7 @@ const Nav = ({ filterStudents, handleLogin, logout, user, isLoggedIn }) => {
             </div>
 
             <div className="Nav-search">
-              <SearchBar filterStudents={filterStudents} />
+              <SearchBar filterStudents={() => null} />
               {isLoggedIn ? (
                 <Butt className="Nav-logout" onClick={logout}>
                   Log out

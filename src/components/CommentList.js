@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import styled from "styled-components";
 
-import { githubUrl } from "./StudentList";
+import { githubUrl } from "../redux/actions/github";
 import CommentCard from "./CommentCard";
 
 class CommentList extends React.Component {

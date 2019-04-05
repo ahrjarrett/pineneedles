@@ -1,55 +1,48 @@
 import React from "react";
-import axios from "axios";
+import { connect } from "react-redux";
 import styled from "styled-components";
 import moment from "moment";
 import { Link } from "react-router-dom";
 
-import { githubUrl } from "./StudentList";
+import { fetchAllRepos } from "../redux/actions/github";
 
-const sortByUpdatedDesc = (a, b) =>
-  new Date(a.updated_at) < new Date(b.updated_at) ? 1 : -1;
-
-// class Student = ({ student, ...props }) => {
 class Student extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      repos: [],
-      comments: []
-    };
-  }
-
-  async componentDidMount() {
+  componentDidMount() {
     const { login } = this.props.match.params;
-    const token = this.props.token || localStorage.token;
-    const localRepos = JSON.parse(
-      window.localStorage.getItem(`${login}-repos`)
-    );
-    if (localRepos) localRepos.sort(sortByUpdatedDesc);
-
-    if (localRepos) {
-      console.log("skipping API call! localRepos:", localRepos);
-      this.setState({ repos: localRepos });
-      return;
-    }
-
-    const response = await axios({
-      url: `${githubUrl}/users/${login}/repos`,
-      method: "GET",
-      headers: {
-        Authorization: `token ${token}`,
-        Accept: "application/vnd.github.v3+json"
-      }
-    });
-    const repos = response.data.sort(sortByUpdatedDesc);
-    console.log("response:", repos);
-    window.localStorage.setItem(`${login}-repos`, JSON.stringify(repos));
-    this.setState({ repos });
+    this.props.fetchAllRepos(login);
   }
+
+  // async componentDidMount() {
+  //   const { login } = this.props.match.params;
+  //   const token = this.props.token || localStorage.token;
+  //   const localRepos = JSON.parse(
+  //     window.localStorage.getItem(`${login}-repos`)
+  //   );
+  //   if (localRepos) localRepos.sort(sortByUpdatedDesc);
+
+  //   if (localRepos) {
+  //     console.log("skipping API call! localRepos:", localRepos);
+  //     this.setState({ repos: localRepos });
+  //     return;
+  //   }
+
+  //   const response = await axios({
+  //     url: `${githubUrl}/users/${login}/repos`,
+  //     method: "GET",
+  //     headers: {
+  //       Authorization: `token ${token}`,
+  //       Accept: "application/vnd.github.v3+json"
+  //     }
+  //   });
+  //   const repos = response.data.sort(sortByUpdatedDesc);
+  //   console.log("response:", repos);
+  //   window.localStorage.setItem(`${login}-repos`, JSON.stringify(repos));
+  //   this.setState({ repos });
+  // }
 
   render() {
     const { login } = this.props.match.params;
-    const { repos } = this.state;
+    const { repos } = this.props;
 
     return (
       <StudentStyles>
@@ -121,4 +114,9 @@ const StudentStyles = styled.div`
   }
 `;
 
-export default Student;
+const mapStateToProps = state => ({ repos: state.github.repos });
+
+export default connect(
+  mapStateToProps,
+  { fetchAllRepos }
+)(Student);

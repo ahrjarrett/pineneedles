@@ -1,57 +1,24 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import styled from "styled-components";
 import AddComment from "./AddComment";
 
-import { githubUrl } from "./StudentList";
+import { fetchRepo, fetchRepoCommits } from "../redux/actions/github";
 
 class Repo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      repo: {},
-      commits: [],
       sha: ""
     };
   }
 
   componentDidMount() {
-    const { repoName } = this.props;
-    this.fetchRepoCommits(repoName);
-    this.fetchRepo(repoName);
+    const { repoName, login } = this.props;
+    this.props.fetchRepoCommits(login, repoName);
+    this.props.fetchRepo(login, repoName);
   }
-
-  fetchRepo = async function(repoName) {
-    const token = this.props.token || localStorage.token;
-    const { login } = this.props;
-    const promise = await axios({
-      method: "GET",
-      url: `${githubUrl}/repos/${login}/${repoName}`,
-      headers: {
-        Authorization: `token ${token}`,
-        Accept: "application/vnd.github.v3+json"
-      }
-    });
-    const repo = await Promise.resolve(promise);
-    this.setState({ repo: repo.data });
-  };
-
-  fetchRepoCommits = async function(repo) {
-    const token = this.props.token || localStorage.token;
-    const { login, repoName } = this.props;
-    const promise = await axios({
-      method: "GET",
-      url: `${githubUrl}/repos/${login}/${repoName}/commits`,
-      headers: {
-        Authorization: `token ${token}`,
-        Accept: "application/vnd.github.v3+json"
-      }
-    });
-    const commits = await Promise.resolve(promise);
-    this.setState({ commits: commits.data });
-  };
 
   updateCommitSha = e => {
     console.log("updating active commit!");
@@ -64,8 +31,8 @@ class Repo extends Component {
   };
 
   render() {
-    const { repo, commits, sha } = this.state;
-    const { login, token } = this.props;
+    const { sha } = this.state;
+    const { commits, login, token, repo } = this.props;
 
     // DELETE:
     console.log("repo:", repo);
@@ -108,9 +75,16 @@ class Repo extends Component {
   }
 }
 
-const mapStateToProps = state => ({ token: state.auth.token });
+const mapStateToProps = state => ({
+  token: state.auth.token,
+  repo: state.github.repo,
+  commits: state.github.commits
+});
 
-export default connect(mapStateToProps)(Repo);
+export default connect(
+  mapStateToProps,
+  { fetchRepo, fetchRepoCommits }
+)(Repo);
 
 const Commit = ({ commit, propogateSha, sha, activeSha, repo, token }) => {
   return (
