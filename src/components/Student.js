@@ -11,39 +11,9 @@ class Student extends React.Component {
     const { login } = this.props.match.params;
     this.props.fetchAllRepos(login);
   }
-
-  // async componentDidMount() {
-  //   const { login } = this.props.match.params;
-  //   const token = this.props.token || localStorage.token;
-  //   const localRepos = JSON.parse(
-  //     window.localStorage.getItem(`${login}-repos`)
-  //   );
-  //   if (localRepos) localRepos.sort(sortByUpdatedDesc);
-
-  //   if (localRepos) {
-  //     console.log("skipping API call! localRepos:", localRepos);
-  //     this.setState({ repos: localRepos });
-  //     return;
-  //   }
-
-  //   const response = await axios({
-  //     url: `${githubUrl}/users/${login}/repos`,
-  //     method: "GET",
-  //     headers: {
-  //       Authorization: `token ${token}`,
-  //       Accept: "application/vnd.github.v3+json"
-  //     }
-  //   });
-  //   const repos = response.data.sort(sortByUpdatedDesc);
-  //   console.log("response:", repos);
-  //   window.localStorage.setItem(`${login}-repos`, JSON.stringify(repos));
-  //   this.setState({ repos });
-  // }
-
   render() {
     const { login } = this.props.match.params;
     const { repos } = this.props;
-
     return (
       <StudentStyles>
         <div className="student-login">
